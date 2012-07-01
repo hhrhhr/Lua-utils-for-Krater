@@ -1,9 +1,12 @@
+package.path = "./?.lua;./work/?.lua"
+
 -- hacks
 local null = function() return false end
 Application = { settings = null, build_identifier = null }
 Gui = {}
 -- hacks end
 require("scripts/hud/font/script_gui")
+
 local murmur = require("murmur")
 
 --[[*************************************************************************]]
@@ -32,7 +35,7 @@ function is_tex_exist(filename)
 end
 
 function is_mat_exist()
-    local m1,m2 = murmur.hash64A(krater_mat, #krater_mat)
+    local m1,m2 = murmur.hash64A(krater_mat)
     local fullpath = unpacked_patch..materials.."("..m1..m2..").mat"
     if is_file_exist(fullpath) then
         return fullpath
@@ -42,7 +45,7 @@ end
 
 --[[*************************************************************************]]
 
-dofile("_parse_material.lua")
+dofile("util_parse_material.lua")
 
 local fullpath = is_mat_exist()
 local hash_table = parse_material(fullpath)
@@ -54,30 +57,26 @@ end
 table.sort(font_names)
 
 for _, font_name in pairs(font_names) do
---   print(font_name)
---    local _m = string.find(font_name, "_masked")
---    local _o = string.find(font_name, "_offscreen")
---    if not (_m or _o) then
-        for k,v in pairs(ScriptGui.fonts[font_name]) do
-            --print(k,v[1],v[2])
-            local size = v[1]
-            local tex_name = v[2]
-            local tex_hash = murmur.hash64A(tex_name, #tex_name):lower()
-            tex_name = tex_name..".dds"
-            tex_hash = hash_table[tex_hash]
+    for _, v in pairs(ScriptGui.fonts[font_name]) do
+        --print(k,v[1],v[2])
+        local font_size = v[1]
+        local texture_name = v[2]
+        local texture_hash = murmur.hash64A(texture_name):lower()
+        texture_name = texture_name..".dds"
+        texture_hash = hash_table[texture_hash]
 
-            local font_desc = ScriptGui.get_font(font_name, size)
-            local desc_hash,dl = murmur.hash64A(font_desc, #font_desc)
-            desc_hash = (desc_hash..dl):lower()
-            font_desc = string.gsub(font_desc, "materials/fonts/", "")
-            font_desc = font_desc..".fnt"
+        local descriptor_name = ScriptGui.get_font(font_name, font_size)
+        local descriptor_hash, dl = murmur.hash64A(descriptor_name)
+        descriptor_hash = (descriptor_hash..dl):lower()
+        descriptor_name = string.gsub(descriptor_name, "materials/fonts/", "")
+        descriptor_name = descriptor_name..".fnt"
 
-            local tex_exist = is_tex_exist(tex_hash)
-            local desc_exist = is_desc_exist(desc_hash)
+        local dds_exist = is_tex_exist(texture_hash)
+        local fnt_exist = is_desc_exist(descriptor_hash)
 
-            if desc_exist and tex_exist then
-                print(tex_hash, tex_name, desc_hash, font_desc)
-            end
-        end
---    end
+        print(dds_exist, fnt_exist, texture_hash, texture_name, descriptor_hash, descriptor_name)
+--[[        if fnt_exist and dds_exist then
+            print(texture_hash, texture_name, descriptor_hash, descriptor_name)
+        end ]]
+    end
 end
