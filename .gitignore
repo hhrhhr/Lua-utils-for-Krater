@@ -1,12 +1,6 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
+# output and tmp files
+work/*
 
-# Compiled Dynamic libraries
-*.so
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+# Lua compiler and modules
+*.dll
+*.exe
