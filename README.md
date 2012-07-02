@@ -13,7 +13,7 @@ parse_fonts
     
 * usage:
 
-        lua parse_fonts.lua
+        lua parse_fonts.lua unpackedRoot descriptorsCatalog textureCatalog materialCatalog
 
 * sample output:
 
