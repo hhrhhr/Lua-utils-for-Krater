@@ -71,7 +71,8 @@ for k,v in pairs(fnt.glyphs) do
     old = new
 end
 
-print("size="..fnt.size..", width="..fnt.tex_width..", height="..fnt.tex_heigth)
+print("size="..fnt.size..", height="..fnt.height..", base="..fnt.base..
+        ", width="..fnt.tex_width..", height="..fnt.tex_heigth)
 print(str)
 
 --[[
