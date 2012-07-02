@@ -63,6 +63,11 @@ function BinaryReader:float32()  -- float
         mul = mul * 0.5
         res = bit32.extract(mantissa, i) * mul + res
     end
-    local f = sign * res * math.pow(2, exp)
+    local f
+    if exp == -127 and mantissa == 0 then
+        f = 0
+    else
+        f = sign * res * math.pow(2, exp)
+    end
     return f
 end
