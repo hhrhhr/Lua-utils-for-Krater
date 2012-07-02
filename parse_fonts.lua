@@ -10,10 +10,18 @@ require("scripts/hud/font/script_gui")
 local murmur = require("murmur")
 
 --[[*************************************************************************]]
+--[[
 local unpacked_patch = "d:\\tmp_Krater\\_db_unp\\"
 local descriptors = "(9efe0a916aae7880)font\\"
 local textures = "(cd4238c6a0c69e32)texture\\"
 local materials = "(eac0b497876adedf)material\\"
+]]
+
+local unpacked_patch = arg[1]
+local descriptors = arg[2]
+local textures = arg[3]
+local materials = arg[4]
+
 local krater_mat = "materials/fonts/krater"
 
 --[[*************************************************************************]]
@@ -25,18 +33,18 @@ function is_file_exist(fullpath)
 end
 
 function is_desc_exist(filename)
-    local fullpath = unpacked_patch..descriptors.."("..filename..").fnt"
+    local fullpath = unpacked_patch.."/"..descriptors.."/".."("..filename..").fnt"
     return is_file_exist(fullpath)
 end
 
 function is_tex_exist(filename)
-    local fullpath = unpacked_patch..textures.."("..filename..").dds"
+    local fullpath = unpacked_patch.."/"..textures.."/".."("..filename..").dds"
     return is_file_exist(fullpath)
 end
 
 function is_mat_exist()
     local m1,m2 = murmur.hash64A(krater_mat)
-    local fullpath = unpacked_patch..materials.."("..m1..m2..").mat"
+    local fullpath = unpacked_patch.."/"..materials.."/".."("..m1..m2..").mat"
     if is_file_exist(fullpath) then
         return fullpath
     end
