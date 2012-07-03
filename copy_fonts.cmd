@@ -15,14 +15,11 @@ if not exist %output% mkdir %output%
 for /f "tokens=1,2,3,4,5,6" %%a in (parsed_fonts.csv) do (
     if %%a==true if %%b==true (
         echo "%%c -> %%d"
-        copy /y "%input%\%dds%\(%%c).dds" "%output%\%%d.dds" >nul
+        copy /y "%input%\%dds%\(%%c).dds" "%output%\%%d" >nul
         echo "%%e -> %%f"
-        copy /y "%input%\%fnt%\(%%e).fnt" "%output%\%%f.fnt" >nul
+        copy /y "%input%\%fnt%\(%%e).fnt" "%output%\%%f" >nul
     )
 )
-
-
-del /q parsed_fonts.csv
 
 
 :eof
