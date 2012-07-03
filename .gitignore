@@ -1,6 +1,11 @@
 # output and tmp files
+output/*
+backup/*
 work/*
+!work/needed_scripts.txt
 
 # Lua compiler and modules
-*.dll
-*.exe
+*.*
+!*.lua
+!*.md
+!*.cmd
