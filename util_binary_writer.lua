@@ -40,13 +40,13 @@ function BinaryWriter:int32(int)
 end
 
 function BinaryWriter:float32(float)
-    if float == 0 then
+    if float == 0.0 then
         BinaryWriter:int32(0)
         return
     end
     local f = 0
     local sign = 0
-    if float < 0 then
+    if float < 0.0 then
         sign = 1
         float = -float
     end
@@ -59,12 +59,12 @@ function BinaryWriter:float32(float)
 
     local m = mantissa - 1
     for i = 22, 0, -1 do
-        m = m * 2
-        if m >= 1 then
-            m = m - 1
+        m = m * 2.0
+        if m >= 1.0 then
+            m = m - 1.0
             f = bit32.replace(f, 1, i, 1)
         end
-        if m == 0 then
+        if m == 0.0 then
             break
         end
     end
