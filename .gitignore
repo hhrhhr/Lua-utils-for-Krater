@@ -1,6 +1,7 @@
 # output and tmp files
-output/*
 backup/*
+output/*
+ready/*
 work/*
 !work/needed_scripts.txt
 
@@ -8,4 +9,7 @@ work/*
 *.*
 !*.lua
 !*.md
+
+# utils and command files
+!tools/*
 !*.cmd
