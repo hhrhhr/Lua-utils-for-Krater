@@ -6,6 +6,11 @@ function BinaryWriter:open(fullpath)
     self.f_handle = assert(io.open(fullpath, "w+b"))
 end
 
+function BinaryWriter:update(fullpath)
+    self.f_handle = assert(io.open(fullpath, "a+b"))
+end
+
+
 function BinaryWriter:close()
     if self.f_handle then
         self.f_handle:close()

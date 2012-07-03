@@ -19,6 +19,7 @@ for %%i in (tools\cfg\*.bmfc) do (
     if exist ready\%%~ni_1.tga echo !!! texture not fit in one file !!!
     del /q ready\%%~ni*.tga
     lua.exe cmd_bmfont2krater.lua ready\%%~ni.fnt
+    lua.exe cmd_fix_dds.lua ready\%%~ni.dds
     del /q ready\%%~ni.fnt
 )
 
