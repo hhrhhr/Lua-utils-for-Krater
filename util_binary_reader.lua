@@ -25,6 +25,12 @@ function BinaryReader:size()
     return self.f_size
 end
 
+function BinaryReader:seek(pos)
+    if self.f_handle then
+       return self.f_handle:seek("set", pos)
+    end
+end
+
 function BinaryReader:int8()  -- byte
     local i8 = 0
     i8 = i8 + string.byte(self.f_handle:read(1)) * 2^0
@@ -70,4 +76,27 @@ function BinaryReader:float32()  -- float
         f = sign * res * math.pow(2, exp)
     end
     return f
+end
+
+--[[
+function BinaryReader:str(len) -- string with lenght
+    local str = ""
+    str = self.f_handle:read(len)
+    return str
+end
+]]
+
+function BinaryReader:str() -- string
+    local chars = {}
+    local char = ""
+    local zero = string.char(0x00)
+    local str = ""
+    while char ~= zero do
+        char = self.f_handle:read(1)
+        table.insert(chars, char)
+        --print(char)
+    end
+    table.remove(chars)
+    str = table.concat(chars)
+    return str
 end

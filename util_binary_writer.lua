@@ -10,7 +10,6 @@ function BinaryWriter:update(fullpath)
     self.f_handle = assert(io.open(fullpath, "a+b"))
 end
 
-
 function BinaryWriter:close()
     if self.f_handle then
         self.f_handle:close()
@@ -75,4 +74,9 @@ function BinaryWriter:float32(float)
     end
 
     BinaryWriter:int32(f)
+end
+
+function BinaryWriter:str(str)
+    self.f_handle:write(str)
+    BinaryWriter:int8(0)
 end
