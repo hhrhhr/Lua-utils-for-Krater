@@ -1,15 +1,5 @@
 # output and tmp files
-backup/*
-output/*
-ready/*
-work/*
-!work/needed_scripts.txt
+_*/*
 
-# Lua compiler and modules
-*.*
-!*.lua
-!*.md
-
-# utils and command files
-!tools/*
-!*.cmd
+# quickbms, Lua compiler and modules
+tools/*
