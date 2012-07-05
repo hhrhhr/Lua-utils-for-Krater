@@ -1,9 +1,10 @@
 local str_num = 0
 local T = {}
+
 function add(param)
     if #param == 0 then return end
     str_num = str_num + 1
-    local _hash = murmur.hash64A(param, #param):lower()
+    local _hash = murmur.hash64A(param):lower()
     for k,v in pairs(T) do
         if v.hash == _hash then
             --print("!!! duplicate ".._hash.." "..param)
@@ -35,6 +36,8 @@ function parse_progress(prerequisites)
         if v.type == "stat" then
             --print("# 2",v.stat_id)
             add(v.stat_id or k)
+        else if v.type = "quest" then
+            add(v.quest_id)
         else
             --print("# 2!",v.type)
         end
@@ -57,6 +60,7 @@ function parse_branch(branch, level)
             end
         elseif v.type == "add_quest" then
             --print(fill(l,"q"),v.description)
+            add(v.quest_id)
             add(v.description)
             l = l + 1
             for k1,v1 in pairs(v.missions) do
@@ -83,6 +87,7 @@ end
 
 function parse_quest(quest)
     clearT()
+
 --[[    parse handle_progress   ]]
     if quest.handle_progress and quest.handle_progress.type == "progress" then
         --print("#",quest.name)
@@ -90,6 +95,7 @@ function parse_quest(quest)
             parse_progress(v)
         end
     end
+
 --[[    parse branches          ]]
     local n = 0
     local b = "branch_"
@@ -103,6 +109,7 @@ function parse_quest(quest)
             break
         end
     end
+
 --[[    parse meta_nodes        ]]
     if quest.meta_nodes and quest.meta_nodes.type == "nodes" then
         --print("\n#",quest.meta_nodes.type)

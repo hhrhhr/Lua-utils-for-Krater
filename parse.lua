@@ -2,20 +2,24 @@ murmur = require("murmur")
 require("save_parsed_data")
 
 lang = {}
+dofile("util_parse_bin_lang.lua")
+
 all_str = 0
 used_str = 0
 unused_str = 0
-dofile("load_lang.lua")
+
 
 t = { data = {} }
-function t:add(v1, v2)
+function t:add(param)
+    if #param == 0 then return end
+    local _hash = murmur.hash64A(param):lower()
     for k,v in pairs(self.data) do
-        if v.hash == v1 then
+        if v.hash == _hash then
             --print("[info] duplicate skipped: "..v1.." "..v2)
             return
         end
     end
-    local tt = {hash = v1, id = v2}
+    local tt = {hash = _hash, id = param}
     table.insert(self.data, tt)
 end
 function t:clear()
