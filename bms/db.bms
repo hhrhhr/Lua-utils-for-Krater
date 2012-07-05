@@ -1,0 +1,101 @@
+idstring \x03\x00\x00\x00
+get filesCount long
+
+for i = 0 < filesCount
+  get hash1l long  // low bits
+  get hash1h long  // high bits, 64-bit hash of unitName
+  get hash2l long  // low bits
+  get hash2h long  // high bits, 64-bit hash of resourceName
+  get lang long    // language flag, 0-english, 1, 2, 4, 8...
+  get name long
+  get fffs long
+
+  if name > 99
+    set dirXX string name
+    string dirXX -= 2
+  else
+    set dirXX string 0
+  endif
+  string dirXX += \
+  string dirXX += name
+
+  string path p= "(%08x%08x)" hash1h hash1l
+  string name p= "(%08x%08x)(%d)" hash2h hash2l name
+  string ext = "."
+  set offset 0
+  open FDSE dirXX 1
+  get size ASIZE 1
+
+  if hash1h == 0x0D972BAB
+    if hash1l == 0x10B40FD3
+      string path += "_localization_"
+      set ext ".lang"
+    endif
+  elseif hash1h == 0x2A690FD3
+    if hash1l == 0x48FE9AC5
+      string path += "level"
+      set ext ".lvl"
+    endif
+  elseif hash1h == 0x931E336D
+    if hash1l == 0x7646CC26
+      string path += "animation"
+      set ext ".oggpak"
+    endif
+  elseif hash1h == 0x99736BE1
+    if hash1l == 0xFFF739A4
+      string path += "_packedOgg_"
+      set ext ".oggpak"
+    endif
+  elseif hash1h == 0x9EFE0A91
+    if hash1l == 0x6AAE7880
+      string path += "font"
+      set ext ".font"
+    endif
+  elseif hash1h == 0xA14E8DFA
+    if hash1l == 0x2CD117E2
+      goto 21 1
+      get sname string 1
+      string sname -= ".lua"
+      set tmp name
+      string name p= "%s%s" sname tmp
+      set offset 4
+      math size -= 4
+      string path += "_script_"
+      set ext ".luac"
+    endif
+  elseif hash1h == 0xAD9C6D9E
+    if hash1l == 0xD1E5E77A
+      string path += "package"
+      set ext ".pack"
+    endif
+  elseif hash1h == 0xB277B11F
+    if hash1l == 0xE4A61D37
+      string path += "_cursors_"
+      set ext ".cur"
+    endif
+  elseif hash1h == 0xCD4238C6
+    if hash1l == 0xA0C69E32
+      string path += "texture"
+      set ext ".dds"
+    endif
+  elseif hash1h == 0xE0A48D0B
+    if hash1l == 0xE9A7453F
+      string path += "unit"
+      set ext ".unit"
+    endif
+  elseif hash1h == 0xEAC0B497
+    if hash1l == 0x876ADEDF
+      string path += "material"
+      set ext ".mat"
+    endif
+  endif
+
+  if lang > 0
+    string lng p= "(%d)" lang
+  else
+    set lng string ""
+  endif
+
+  string filename p= "%s\%s%s%s" path name lng ext
+  log filename offset size 1
+next i

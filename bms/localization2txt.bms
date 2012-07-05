@@ -1,0 +1,35 @@
+get name BASENAME
+
+idstring \xAE\xF3\x85\x3E
+get numStrings long
+
+get fsize ASIZE
+math fsize *= 2
+log MEMORY_FILE fsize 0
+log MEMORY_FILE 0 0
+
+set eol short 2573  // \x0D\x0A
+
+string head p= "[(game_strings)%s]" name
+putct head string -1 MEMORY_FILE
+put eol short MEMORY_FILE
+
+for i = 0 < numStrings
+  get sid long
+  get offset long
+  savepos pos
+
+  goto offset
+  get str string
+
+  string text p= "%08x = %s" sid str
+  putct text string -1 MEMORY_FILE
+  put eol short MEMORY_FILE
+
+  goto pos
+  #print "%pos% %text%"
+next i
+
+get msize ASIZE MEMORY_FILE
+string name += ".txt"
+log name 0 msize MEMORY_FILE
