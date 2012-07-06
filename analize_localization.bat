@@ -20,3 +20,4 @@ echo log saved in %work%\strings_info.txt
 
 :eof
 set arg=
+pause
