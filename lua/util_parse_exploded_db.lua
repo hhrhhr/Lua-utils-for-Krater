@@ -57,3 +57,7 @@ function parse_exploded_db(fullpath)
 
     return hash_table
 end
+
+function make_path(name)
+    return string.sub(name, 0, string.len(name)-2) .. "\\" .. name
+end
