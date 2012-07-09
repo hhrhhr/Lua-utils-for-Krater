@@ -1,0 +1,36 @@
+idstring \x03\x00\x00\x00
+get filesCount long
+
+for i = 0 < filesCount
+  get hash1l long  // low bits
+  get hash1h long  // high bits, 64-bit hash of unitName
+  get hash2l long  // low bits
+  get hash2h long  // high bits, 64-bit hash of resourceName
+  get lang long    // language flag, 0-english, 1, 2, 4, 8...
+  get name long
+  get fffs long
+
+  if hash1h == 0xA14E8DFA
+    if hash1l == 0x2CD117E2
+      if name > 99
+        set dirXX string name
+        string dirXX -= 2
+      else
+        set dirXX string 0
+      endif
+      string dirXX += \
+      string dirXX += name
+
+      open FDSE dirXX 1
+      get size ASIZE 1
+
+      goto 21 1
+      get name string 1
+      string name += "c"    // .lua + c = .luac
+      set offset 4
+      math size -= 4
+
+      log name offset size 1
+    endif
+  endif
+next i
