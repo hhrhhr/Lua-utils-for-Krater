@@ -41,5 +41,5 @@ function parse_bin_language(fullpath)
     r:close()
     print("[LOG] lang file closed")
 
-    return lang
+    return lang, string_num
 end
