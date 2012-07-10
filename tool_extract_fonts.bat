@@ -6,8 +6,11 @@ if not exist %work% mkdir %work%
 
 %lua% lua\cmd_extract_fonts.lua %krater% %work% > %work%\font_list.txt
 
-if not exist %work%\fonts mkdir %work%\fonts
-del /q /s %work%\fonts\*.* >nul
+if exist %work%\fonts (
+    del /q /s %work%\fonts\*.* >nul
+) else (
+    mkdir %work%\fonts
+)
 
 :copy_files
 for /f "tokens=1,2,3,4" %%a in (%work%\font_list.txt) do (

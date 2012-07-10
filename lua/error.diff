@@ -1,0 +1,20 @@
+1c1
+< local format_error_message = function(message)
+---
+> local format_error_message = function(message, ...)
+8c8
+< function Application.warning()
+---
+> function Application.warning(...)
+18c18
+< function Application.error()
+---
+> function Application.error(...)
+28c28
+< function fassert(condition, message)
+---
+> function fassert(condition, message, ...)
+34c34
+< function ferror(message)
+---
+> function ferror(message, ...)
