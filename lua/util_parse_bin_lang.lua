@@ -24,11 +24,12 @@ function parse_bin_language(fullpath)
     end
     print("[LOG] offsets readed")
 
---    local len = 0
     for i = 1, string_num do
---        len = (offsets[i+1] or r:size()) - offsets[i]
---        str = r:str(len)
         str = r:str()
+        -- del 0x0a (<CR>)
+        str = string.gsub(str, "\x0a", "")
+        -- clear spaces
+        str = string.gsub(str, "(%s+)$", "")
         table.insert(strings, str)
     end
     print("[LOG] strings readed")

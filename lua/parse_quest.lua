@@ -1,4 +1,4 @@
-T = t
+--T = t
 
 function fill(num, suf)
     return "#" .. string.rep("-",num) ..
@@ -62,7 +62,7 @@ function parse_branch(branch, level)
 end
 
 function parse_quest(quest)
-    --T = t
+    T = t
     T:clear()
 
 --[[    parse handle_progress   ]]

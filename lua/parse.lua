@@ -1,19 +1,41 @@
 package.path = "lua/?.lua;_script/?.lua"
-require("util_parse_exploded_db")
-require("util_parse_bin_lang")
 require("util_save_parsed_data")
-require("util_save_parsed_quest")
 local murmur = require("murmur")
 
--- arguments: fullpath to Krater directory
---          : output path
-local game_path = arg[1]
-out_path = arg[2]
-all_str = 0
-used_str = 0
-unused_str = 0
+-- // hacks for game scripts
+function Color(r, g, b) return true end
+function fassert(v1, v2, v3) return true end
+Application = {}
+-- \\ hacks
+require("scripts/settings/tutorials")
+require("scripts/settings/shop_settings")
+require("scripts/settings/monster_toppings")
+require("scripts/settings/item_archetypes/item_archetypes")
+require("scripts/settings/item_archetypes/item_properties")
+require("scripts/settings/area_settings")
+require("scripts/settings/abilities/abilities")
 
+-- arguments: path to lang file
+--          : lang name ("eng" for example)
+--          : output directory path
+--          : path to translated lang file, not required
+--          : lang name ("rus" for example)
+local lang_file = arg[1]
+      lang_name = arg[2]
+      out_path  = arg[3]
+local tr_file   = arg[4]
+      tr_name   = arg[5] or "new"
+
+-- counters
+local all_str = 0
+local tr_str = 0
+local used_str = 0
+local unused_str = 0
+
+--[[
 -- fing english localization
+require("util_parse_exploded_db")
+require("util_parse_bin_lang")
 local db = parse_exploded_db(game_path .. "/data/" .. "exploded_database.db")
 local strings = "localization/game_strings"
 local a, b = murmur.hash64A(strings)
@@ -21,6 +43,29 @@ strings = (a..b):lower()
 local lang_file = db[strings].internal_name
 lang, all_str = parse_bin_language(game_path .. "\\data\\" .. make_path(lang_file))
 used = {}
+]]
+
+-- language tables
+lang = {}
+lang_tr = {}
+used = {}
+
+local hash, str = "", ""
+for line in io.lines(lang_file) do
+    hash = string.sub(line, 1, 8)
+    str = string.sub(line, 12)
+    lang[hash] = str
+    all_str = all_str + 1
+end
+
+if tr_file then
+    for line in io.lines(tr_file) do
+        hash = string.sub(line, 1, 8)
+        str = string.sub(line, 12)
+        lang_tr[hash] = str
+        tr_str = tr_str + 1
+    end
+end
 
 -- main
 
@@ -51,12 +96,11 @@ fname = "gui"
 for line in io.lines("_work\\strings_in_scripts.txt") do
     t:add(line)
 end
---t:sort()
+--t:sort()  -- already sorted in cmd_find_strings_in_scripts.lua
 SaveParsedData()
 t:clear()
 
 --[[ output: tutorials.txt  *************************************************]]
-require("scripts/settings/tutorials")
 fname = "tutorials"
 local parse = Tutorials
 
@@ -70,7 +114,6 @@ SaveParsedData()
 t:clear()
 
 --[[ output: shop.txt *******************************************************]]
-require("scripts/settings/shop_settings")
 fname = "shops"
 local parse = ShopArchetypes
 
@@ -83,7 +126,6 @@ SaveParsedData()
 t:clear()
 
 --[[ output: monsters.txt  *************************************************]]
-require("scripts/settings/monster_toppings")
 fname = "monsters"
 local parse = ArchetypeGroups
 
@@ -98,8 +140,6 @@ SaveParsedData()
 t:clear()
 
 --[[ prepare to item_archetypes *********************************************]]
-require("scripts/settings/item_archetypes/item_archetypes")
-
 local function parse_weapon(class)
     print("[ log] parsing "..fname)
     for k, v in pairs(ItemArchetypes.weapons) do
@@ -134,7 +174,7 @@ fname = "weapon_epic"
 local parse = ItemArchetypesDesigned
 
 print("[ log] parsing "..fname)
-for _,j in pairs(parse) do
+for _, j in pairs(parse) do
     for k, v in pairs(j) do
         t:add(k)
         t:add(v.name)
@@ -201,8 +241,8 @@ fname = "trash"
 local parse = ItemArchetypes.trash
 
 print("[ log] parsing "..fname)
-for i,j in pairs(parse) do
-    for k,v in pairs(j.levels) do
+for i, j in pairs(parse) do
+    for k, v in pairs(j.levels) do
         t:add(v.loc)
         local opt = v.optional_text
         if opt then
@@ -235,8 +275,8 @@ fname = "craft"
 local parse = ItemArchetypes.craft
 
 print("[ log] parsing "..fname)
-for i,j in pairs(parse) do
-    for k,v in pairs(j.levels) do
+for i, j in pairs(parse) do
+    for k, v in pairs(j.levels) do
         t:add(v.loc)
     end
 end
@@ -249,8 +289,8 @@ fname = "components"
 local parse = ItemArchetypes.components
 
 print("[ log] parsing "..fname)
-for i,j in pairs(parse) do
-    for k,v in pairs(j.levels) do
+for i, j in pairs(parse) do
+    for k, v in pairs(j.levels) do
         local id = v.id
         if id then
             t:add(id)
@@ -267,32 +307,25 @@ SaveParsedData()
 t:clear()
 
 --[[ output: properties.txt *************************************************]]
--- // hacks
-function Color(r,g,b) return true end
-function fassert(v1,v2,v3) return true end --print(string.format("!!!fassert!!! %s: %s %s",v1,v2,v3)) end
--- \\ hacks
-
-require("scripts/settings/item_archetypes/item_properties")
 fname = "properties"
-print("[ log] parsing "..fname)
-
 local parse = ItemPropertiesPowerNames
-for k,v in pairs(parse) do
+
+print("[ log] parsing "..fname)
+for k, v in pairs(parse) do
     t:add(v)
 end
 
 local parse = ItemProperties
-for k,v in pairs(parse) do
+for k, v in pairs(parse) do
     if v.type == "prefix" or v.type == "suffix" then
-        for i,j in pairs(v) do
+        for i, j in pairs(v) do
             if type(j) == "table" then
-                --print("",i,j.name)
                 t:add(j.name)
             end
         end
     elseif v.type == "components" then
         if v.stat == "buff" then
-            for i,j in pairs(v.buffs) do
+            for i, j in pairs(v.buffs) do
                 t:add(j)
             end
         else
@@ -307,24 +340,18 @@ SaveParsedData()
 t:clear()
 
 --[[ output: areas.txt ******************************************************]]
--- // hacks
-Application = {}
--- \\ hacks
-require("scripts/settings/area_settings")
 fname = "areas"
-print("[ log] parsing "..fname)
-
 local parse = RANDOM_LOADING_SCREEN_TEXTS
-for k,v in pairs(parse) do
+
+print("[ log] parsing "..fname)
+for k, v in pairs(parse) do
     t:add(v)
 end
---local tips = t.data
---t:clear()
 
 local parse = AreaSettings
-for k,v in pairs(parse) do
+for k, v in pairs(parse) do
     t:add(v.name)
-    for i,j in pairs(v.layout) do
+    for i, j in pairs(v.layout) do
         t:add(j.name)
         local tid = j.loading_screen.text_id
         if type(tid) ~= "table" then
@@ -332,26 +359,24 @@ for k,v in pairs(parse) do
         end
     end
 end
-
 t:sort()
 SaveParsedData()
 t:clear()
 
 --[[ output: abilities.txt  *************************************************]]
-require("scripts/settings/abilities/abilities")
 fname = "abilities"
 local parse = Abilities
 
 print("[ log] parsing "..fname)
 local abils = {}
-for k,v in pairs(parse) do
+for k, v in pairs(parse) do
     if v.icon then
-        table.insert(abils,tostring(k))
+        table.insert(abils, tostring(k))
     end
 end
 table.sort(abils)
 
-for i,j in pairs(abils) do
+for i, j in pairs(abils) do
     local ab = parse[j]
     t:add(ab.name)
     local desc = ab.description
@@ -373,14 +398,15 @@ questnames = {}
 
 print("[ log] parsing quests")
 for line in io.lines("_script/" .. fname..".lua") do
-    line = string.match(line, "%(\"(.*)\"%)$")
-    line = string.match(line, "/([^/.]*)$")
+    line = string.match(line, "%(\"(.*)\"%)$")      -- skip (" ")
+    line = string.match(line, "/([^/.]*)$")         -- take script name
     table.insert(questnames, line)
 end
+
 require(fname)
 require("parse_quest")
 quests = {}
-for k,v in pairs(questnames) do
+for k, v in pairs(questnames) do
     local s = ""
     s = "table.insert(quests, parse_quest(" .. v .. "))"
     local chunk = load(s)
@@ -389,40 +415,40 @@ end
 SaveParsedQuests()
 t:clear()
 
+
+
 --[[ calculate used strings *************************************************]]
-for k,v in pairs(used) do
+for k, v in pairs(used) do
     used_str = used_str + 1
 end
-print("[info] used only "..used_str.." localized strings\n")
+print("[info] used only " .. used_str .. " localized strings\n")
 
 --[[ save unused strins *****************************************************]]
 print("[ log] parsing unknown strings")
-local newlang = {}
-for k,v in pairs(lang) do
+local sorted_lang = {}
+for k, v in pairs(lang) do
     if not used[k] then
-        table.insert(newlang, k)
+        table.insert(sorted_lang, k)
     end
 end
-table.sort(newlang)
+table.sort(sorted_lang)
 
 print("[ log] saving unknown strings")
 local ft = assert(io.open(out_path .. "\\" .. "__unused.txt", "w+"))
-for k,v in pairs(newlang) do
+for k, v in pairs(sorted_lang) do
     if not used[k] then
         unused_str = unused_str + 1
 
         ft:write("[" .. v .. "]\n")
         ft:write("id  = \n")
-        ft:write("eng = " .. lang[v] .. "\n")
-        ft:write("rus = \n\n")
---        ft:write("#[" .. v .. "]\n")
---        ft:write(lang[v].eng .. "\n")
+        ft:write(lang_name .. " = " .. lang[v] .. "\n")
+        ft:write(tr_name .. " = \n\n")
     end
 end
 ft:close()
 print("[info] saved "..unused_str.." unknown strings\n")
 
-if used_str+unused_str == all_str then
+if used_str + unused_str == all_str then
     print("[info] "..used_str.."+"..unused_str.."="..all_str..", all OK")
 else
     print("[warn] "..used_str.."+"..unused_str.."!="..all_str..", something wrong")

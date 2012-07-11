@@ -112,7 +112,7 @@ for k, v in pairs(sorted_chars) do
     old = new
 end
 
-print("\n--- list all char codes ---")
+print("\n--- list all UTF8 char codes ---")
 print(table.concat(sorted_chars,", "))
 print(string.rep("-", 80))
 

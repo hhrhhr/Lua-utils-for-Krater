@@ -9,7 +9,7 @@ if exist %script% (
     mkdir %script%
 )
 
-title unpack lua scripts... >nul
+title unpack lua scripts...
 %qbms% %1 %2 bms\only_lua.bms %krater%\data\exploded_database.db %script%
 
 :firsttry
@@ -31,7 +31,10 @@ for /r %script% %%i in (*.luac) do (
     rem echo %%i decompiling [!N! / %num%]...
 
     "%java%" -jar %unluac% "%%i" > "%%~dpni.lua"
-    if ERRORLEVEL 1 echo %%i >> %work%\unlua_errors.log
+    if ERRORLEVEL 1 (
+        echo %%i >> %work%\unlua_errors.log
+        ren %%~dpni.lua %%~dpni.bad
+    )
 )
 
 if not exist %work%\unlua_errors.log goto eof
@@ -42,12 +45,21 @@ echo.
 echo failed files:
 type %work%\unlua_errors.log
 echo.
-echo trying another tool (set extension to .lua2)...
+echo trying another tool (set extension to .2.lua)...
 echo.
 
 for /f %%i in (%work%\unlua_errors.log) do (
-    %luadec% "%%i" > "%%~dpni.lua2"
+    %luadec% "%%i" > "%%~dpni.2.lua"
 )
+
+echo.
+echo change some scripts...
+echo.
+copy /y lua\error.fixed %script%\foundation\scripts\util\error.lua
+
+echo.
+echo all done
+echo.
 
 :eof
 pause
