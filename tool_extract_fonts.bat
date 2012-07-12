@@ -6,6 +6,9 @@ if not exist %work% mkdir %work%
 
 %lua% lua\cmd_extract_fonts.lua %krater% %work% > %work%\font_list.txt
 
+set /p q=continiue or exit (any key, q)?
+if .%q%==.q goto eof
+
 if exist %work%\fonts (
     del /q /s %work%\fonts\*.* >nul
 ) else (
