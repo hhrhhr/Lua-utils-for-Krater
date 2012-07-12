@@ -3,10 +3,11 @@ require("util_parse_exploded_db")
 require("util_parse_bin_lang")
 local murmur = require("murmur")
 
--- argument: fullpath to Krater directory
+-- arguments: fullpath to Krater directory
 local game_path = arg[1]
-local db = parse_exploded_db(game_path .. "/data/" .. "exploded_database.db")
+local out_path = arg[2] or false
 
+local db = parse_exploded_db(game_path .. "/data/" .. "exploded_database.db")
 local strings = "localization/game_strings"
 local a, b = murmur.hash64A(strings)
 strings = (a..b):lower()
@@ -112,15 +113,23 @@ for k, v in pairs(sorted_chars) do
     old = new
 end
 
-print("\n--- list all UTF8 char codes ---")
-print(table.concat(sorted_chars,", "))
-print(string.rep("-", 80))
-
-print("\n--- list all char codes in BMFont format ---")
-print(str)
-print(string.rep("-", 80))
-
-print("\n--- list all UTF8 chars ---")
 local BOM = string.char(0xef)..string.char(0xbb)..string.char(0xbf)
-print(BOM..table.concat(glyphs))
-print(string.rep("-", 80))
+if out_path then
+    local f = assert(io.open(out_path .. "\\utf8_char_list.txt", "w+"))
+    local str = BOM .. table.concat(glyphs)
+    f:write(str)
+    f:close()
+    print("\nutf8_char_list.txt for BMFont generated")
+else
+    print("\n--- list all UTF8 char codes ---")
+    print(table.concat(sorted_chars,", "))
+    print(string.rep("-", 80))
+    
+    print("\n--- list all char codes in BMFont format ---")
+    print(str)
+    print(string.rep("-", 80))
+    
+    print("\n--- list all UTF8 chars ---")
+    print(BOM .. table.concat(glyphs))
+    print(string.rep("-", 80))
+end
