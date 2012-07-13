@@ -18,9 +18,9 @@ local lang_file = db[strings].internal_name
 -- can be used db[strings][n].internal_name, where n = 1,2,4,8...
 
 -- make path from file XXXYY to XXX/XXXYY
-lang_file = string.sub(lang_file, 0, string.len(lang_file)-2) .. "/" .. lang_file
+lang_file = make_path(lang_file)
 
-local lang = parse_bin_language(game_path .. "/data/" .. lang_file)
+local lang = parse_bin_language(game_path .. "\\data\\data\\" .. lang_file)
 
 -- count all chars and glyph (UTF8)
 print("[LOG] scan for unique chars")

@@ -17,11 +17,11 @@ if exist %work%\fonts (
 
 :copy_files
 for /f "tokens=1,2,3,4" %%a in (%work%\font_list.txt) do (
-    if exist "%krater%\data\%%a" (
+    if exist "%krater%\data\data\%%a" (
         echo "%%a -> %%c"
-        copy /y "%krater%\data\%%a" "%work%\fonts\%%c" >nul
+        copy /y "%krater%\data\data\%%a" "%work%\fonts\%%c" >nul
         echo "%%b -> %%d"
-        copy /y "%krater%\data\%%b" "%work%\fonts\%%d" >nul
+        copy /y "%krater%\data\data\%%b" "%work%\fonts\%%d" >nul
     )
 )
 

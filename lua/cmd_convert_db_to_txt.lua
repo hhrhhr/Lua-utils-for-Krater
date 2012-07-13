@@ -12,9 +12,9 @@ local reader = BinaryReader
 reader:open(game_path .. "/data/" .. "exploded_database.db")
 print("[LOG] open db")
 
-local header = reader:int32()
-assert(header == 3, "[ERROR] wrong header")
-f:write("header = " .. header .. "\n")
+local version = reader:int32()
+assert(version == 4, "[ERROR] wrong version")
+f:write("version = " .. version .. "\n")
 
 local files_count = reader:int32()
 print("[LOG] found "..files_count.." files")
@@ -27,11 +27,17 @@ for i = 1, files_count do
     local file_hash = reader:hex32()
     file_hash = reader:hex32() .. file_hash
     local language = reader:int32()
-    local internal_name = reader:int32()
+--[[
     local fffs = reader:int32()
     fffs = fffs < files_count and fffs or -1
     f:write(string.format("\t%s %s %3d %5d %d\n",
         unit_hash, file_hash, language, internal_name, fffs))
+]]
+    local internal_name = reader:hex32()
+    internal_name = reader:hex32() .. internal_name
+    local lnk2, lnk1 = reader:hex32(), reader:hex32()
+    f:write(string.format("\t%s %s %3d %s %s\n",
+        unit_hash, file_hash, language, internal_name, lnk1 .. lnk2))
 end
 f:write("]]\n")
 

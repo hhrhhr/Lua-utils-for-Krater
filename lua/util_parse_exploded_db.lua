@@ -6,7 +6,7 @@ function parse_exploded_db(fullpath)
     print("[LOG] open db")
 
     local header = reader:int32()
-    assert(header == 3, "[ERROR] wrong header")
+    assert(header == 4, "[ERROR] wrong header")
 
     local hash_table = {}
 
@@ -19,13 +19,17 @@ function parse_exploded_db(fullpath)
         local file_hash = reader:hex32()
         file_hash = reader:hex32() .. file_hash
         local language = reader:int32()
+--[[
         local internal_name = reader:int32()
         local fffs = reader:int32()
---[[        if fffs ~= 0xffffffff then
+        if fffs ~= 0xffffffff then
             print(string.format("[INF] unknown field: %s %s %d %d -> %d <-",
                 unit_hash, file_hash, language, internal_name, fffs))
         end
 ]]
+        local internal_name = reader:hex32()
+        internal_name = reader:hex32() .. internal_name
+        local lnk2, lnk1 = reader:hex32(), reader:hex32()
         if language == 0 then
             hash_table[file_hash] = {
                 unit_hash = unit_hash,
@@ -59,5 +63,5 @@ function parse_exploded_db(fullpath)
 end
 
 function make_path(name)
-    return string.sub(name, 0, string.len(name)-2) .. "\\" .. name
+    return string.sub(name, 0, 2) .. "\\" .. name
 end

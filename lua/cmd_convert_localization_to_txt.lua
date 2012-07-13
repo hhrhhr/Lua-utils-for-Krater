@@ -27,9 +27,9 @@ for i, code in pairs(lang_codes) do
     end
 
     -- make path from file XXXYY to XXX/XXXYY
-    lang_file = string.sub(lang_file, 0, string.len(lang_file)-2) .. "/" .. lang_file
+    lang_file = make_path(lang_file)
     
-    local lang = parse_bin_language(game_path .. "/data/" .. lang_file)
+    local lang = parse_bin_language(game_path .. "\\data\\data\\" .. lang_file)
     
     --------------------------------------------------------------------------------
     local sorted_lang = {}

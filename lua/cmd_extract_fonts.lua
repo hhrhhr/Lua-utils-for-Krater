@@ -14,8 +14,8 @@ local str = "materials/fonts/krater"
 local hash, hl = murmur.hash64A(str)
 hash = string.lower(hash .. hl)
 
-local mat = db[hash].internal_name
-mat = game_path .. "\\data\\" ..make_path(mat)
+local mat = make_path(db[hash].internal_name)
+mat = game_path .. "\\data\\data\\" .. mat
 
 local hash_table = parse_material(mat)
 
