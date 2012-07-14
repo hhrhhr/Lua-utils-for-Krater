@@ -388,7 +388,7 @@ for i, j in pairs(abils) do
         t:add(opt)
     end
 end
---t:sort()
+t:sort()
 SaveParsedData()
 t:clear()
 

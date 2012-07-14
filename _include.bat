@@ -25,6 +25,6 @@ set work=_work
 set script=_script
 
 :: values for quickbms's unpack
-set lngdir=(0d972bab10b40fd3)_localization_
-set luadir=(a14e8dfa2cd117e2)_script_
+set lngdir=_0d972bab10b40fd3__localization_
+set luadir=_a14e8dfa2cd117e2__script_
 
