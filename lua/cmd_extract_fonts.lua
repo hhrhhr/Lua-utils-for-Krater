@@ -19,50 +19,19 @@ mat = game_path .. "\\data\\data\\" .. mat
 
 local hash_table = parse_material(mat)
 
-local fonts = {
-    krater = {
-        font = "comic_krater",
-        sizes = {16, 20, 22, 25, 30, 32, 35, 40, 42, 45, 50}
-    },
-    krater_outline = {
-        font = "comic_krater",
-        suff = "_outline",
-        sizes = {16}
-    },
-    fatfont = {
-        font = "fatfont",
-        sizes = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70}
-    },
-    fat_unicorn = {
-        font = "fat_unicorn",
-        sizes = {16, 20, 25, 30, 35}
-    },
-    fatshark_medium = {
-        font = "fatshark_medium",
-        sizes = {10, 15, 20, 25, 30, 35, 40, 45, 50}
-    }
-}
-
-local conversion = {
-    fatfont = "header_font_krater",
-    fatshark_medium = "medium_font_krater"
-}
+--fonts = {}
+dofile("lua/inc_fonts.lua")
 
 local texture_name, desc_name = "", ""
 local texture_hash, desc_hash = "", ""
 for font, v in pairs(fonts) do
-    if conversion[font] then
-        v.desc = conversion[font]
-    else
-        v.desc = v.font
-    end
     for i, size in pairs(v.sizes) do
-        texture_name = v.font .. "_" .. size .. (v.suff or "")
+        texture_name = v.t_names[i]
         texture_hash = murmur.hash64A(texture_name):lower()
         texture_hash = hash_table[texture_hash]
         texture_name = texture_name .. ".dds"
 
-        desc_name = v.desc .. "_" .. size .. (v.suff or "")
+        desc_name = v.d_names[i]
         desc_hash, dl = murmur.hash64A("materials/fonts/" .. desc_name)
         desc_hash = (desc_hash .. dl):lower()
         desc_name = desc_name .. ".fnt"
