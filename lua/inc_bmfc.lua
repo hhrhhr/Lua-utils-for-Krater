@@ -5,9 +5,9 @@ fileVersion=1
 fontName=%s
 charSet=0
 fontSize=%d
-aa=4
+aa=%d
 scaleH=100
-useSmoothing=1
+useSmoothing=%d
 isBold=%d
 isItalic=0
 useUnicode=1
@@ -22,8 +22,8 @@ paddingDown=0
 paddingUp=0
 paddingRight=0
 paddingLeft=0
-spacingHoriz=4
-spacingVert=4
+spacingHoriz=2
+spacingVert=2
 useFixedHeight=0
 forceZero=0
 
@@ -35,17 +35,17 @@ fontDescFormat=0
 fourChnlPacked=0
 textureFormat=tga
 textureCompression=0
-alphaChnl=0
-redChnl=4
-greenChnl=4
-blueChnl=4
+alphaChnl=%d
+redChnl=%d
+greenChnl=%d
+blueChnl=%d
 invA=0
 invR=0
 invG=0
 invB=0
 
 # outline
-outlineThickness=0]]
+outlineThickness=%d]]
 
 --[[
 local font = "Ubuntu"
@@ -55,6 +55,17 @@ local width = 256
 local height = 256
 --]]
 
-function make_bmfc(font, size, bold, width, height)
-    return string.format(content, font, size, bold, width, height)
+function make_bmfc(font, size, bold, width, height, outline)
+    local aa, smooth = 16, 1
+    if size < 20 then
+        aa = 0
+        smooth = 0
+    end
+    local a, b, c = 0, 4, 0
+    if outline == "_outline" then
+        a = 1
+        b = 0
+        c = 2
+    end
+    return string.format(content, font, size, aa, smooth, bold, width, height, a, b, b, b, c)
 end

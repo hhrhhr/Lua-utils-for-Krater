@@ -26,7 +26,7 @@ goto eof
 
 :error
 echo put your working copy in "%work%\translated" directory
-echo then run this file again
+echo then run this script again
 
 :eof
 pause

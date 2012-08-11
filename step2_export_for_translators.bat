@@ -24,7 +24,9 @@ if not exist %work%\for_translate mkdir %work%\for_translate
 
 title find strings ids...
 
-echo.>%work%\game_strings_%tr_lang%.txt
+if not exist %work%\game_strings_%tr_lang%.txt (
+    echo.>%work%\game_strings_%tr_lang%.txt
+)
 
 %lua% lua\parse.lua %work%\game_strings_%src_lang_num%.txt %src_lang% ^
 %work%\for_translate ^

@@ -6,21 +6,27 @@ local murmur = require("murmur")
 -- arguments: fullpath to Krater directory
 local game_path = arg[1]
 local out_path = arg[2] or false
+local ready_tr = arg[3] or false
 
-local db = parse_exploded_db(game_path .. "/data/" .. "exploded_database.db")
-local strings = "localization/game_strings"
-local a, b = murmur.hash64A(strings)
-strings = (a..b):lower()
-a, b = nil, nil
-
--- find english localization
-local lang_file = db[strings].internal_name
--- can be used db[strings][n].internal_name, where n = 1,2,4,8...
-
--- make path from file XXXYY to XXX/XXXYY
-lang_file = make_path(lang_file)
-
-local lang = parse_bin_language(game_path .. "\\data\\data\\" .. lang_file)
+local lang
+if ready_tr then
+    lang = parse_bin_language(ready_tr)
+else
+    local db = parse_exploded_db(game_path .. "/data/" .. "exploded_database.db")
+    local strings = "localization/game_strings"
+    local a, b = murmur.hash64A(strings)
+    strings = (a..b):lower()
+    a, b = nil, nil
+    
+    -- find english localization
+    local lang_file = db[strings].internal_name
+    -- can be used db[strings][n].internal_name, where n = 1,2,4,8...
+    
+    -- make path from file XXXYY to XXX/XXXYY
+    lang_file = make_path(lang_file)
+    
+    lang = parse_bin_language(game_path .. "\\data\\data\\" .. lang_file)
+end
 
 -- count all chars and glyph (UTF8)
 print("[LOG] scan for unique chars")

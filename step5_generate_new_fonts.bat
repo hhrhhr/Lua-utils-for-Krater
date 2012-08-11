@@ -10,9 +10,7 @@ if exist %work%\new_fonts (
     mkdir %work%\new_fonts
 )
 
-if not exist %work%\utf8_char_list.txt (
-    %lua% lua\cmd_analize_localization.lua %krater% %work%
-)
+%lua% lua\cmd_analize_localization.lua %krater% %work% %work%\game_strings.%tr_lang%.bin
 
 %lua% lua\cmd_generate_new_fonts.lua %krater% %work%\new_fonts
 

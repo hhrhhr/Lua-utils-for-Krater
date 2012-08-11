@@ -20,7 +20,7 @@ mat = game_path .. "\\data\\data\\" .. mat
 local hash_table = parse_material(mat)
 
 --fonts = {}
-dofile("lua/inc_fonts.lua")
+require("inc_fonts")
 
 local texture_name, desc_name = "", ""
 local texture_hash, desc_hash = "", ""
