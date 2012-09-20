@@ -11,7 +11,7 @@ local function WriteString(f_handle, data)
         f_handle:write("[" .. hash .. "]\n")
         f_handle:write("id  = " .. id .. "\n")
         f_handle:write(lang_name .. " = " .. str .. "\n")
-        f_handle:write(tr_name .." = " .. str_tr .. "\n\n")
+        f_handle:write(tr_name .." = " .. str_tr .. "\n\n\n")
     end
 end
 
@@ -37,7 +37,7 @@ function SaveParsedQuests()
             else
                 ft = f01
             end
-            ft:write(string.rep("#", 40) .. "\n# file: " .. questnames[i] .. "\n\n")
+            ft:write(string.rep("#", 40) .. "\n# file: " .. questnames[i] .. "\n\n\n")
             for _, v in pairs(quest) do
                 WriteString(ft, v)
             end

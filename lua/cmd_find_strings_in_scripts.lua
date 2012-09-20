@@ -13,6 +13,13 @@ if command == "find" then
             --print(str..", :lookup()")
             out:write(str .. "\n")
         end
+        for str in string.gmatch(line, "text = \"(menu_.+)\"") do
+            out:write(str .. "\n")
+        end
+        for str in string.gmatch(line, "text = \"(main_menu_.+)\"") do
+            out:write(str .. "\n")
+        end
+
     end
     out:close()
 elseif command == "sort" then
@@ -20,6 +27,16 @@ elseif command == "sort" then
     for line in io.lines(fname) do
         table.insert(strings, line)
     end
+-- manual founded strings
+    for i = 1, 15 do
+        table.insert(strings, "rank_" .. i)
+    end
+    table.insert(strings, "weapons")
+    table.insert(strings, "upgrades")
+    table.insert(strings, "crafting")
+    table.insert(strings, "valuables")
+    table.insert(strings, "Blueprint_optional_text")
+--
     table.sort(strings)
     local sorted = {}
     local old = ""

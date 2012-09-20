@@ -13,6 +13,7 @@ function parse_progress(prerequisites)
             --print("# 2",v.stat_id)
             T:add(v.stat_id or k)
         elseif v.type == "quest" then
+            --print("# 2",v.quest_id)
             T:add(v.quest_id)
         else
             --print("# 2!",v.type)
@@ -26,7 +27,7 @@ function parse_branch(branch, level)
         if v.type == "text_choice" then
             --print(fill(l,"+"),v.text)
             T:add(v.text)
-            for k1,v1 in pairs(v.options) do
+            for k1, v1 in pairs(v.options) do
                 --print(fill(l,"+"),v1)
                 T:add(v1)
             end
@@ -35,17 +36,29 @@ function parse_branch(branch, level)
                 parse_branch(v1, l)
             end
         elseif v.type == "add_quest" then
-            --print(fill(l,"q"),v.description)
+            --print(fill(l,"q"),v.quest_id)
             T:add(v.quest_id)
+            --print(fill(l,"d"),v.description)
             T:add(v.description)
             l = l + 1
-            for k1,v1 in pairs(v.missions) do
+            for k1, v1 in pairs(v.missions) do
                 if v1.stat_name then
                     --print(fill(l,"m"),v1.stat_name)
                     T:add(v1.stat_name)
                 end
             end
             l = l - 1
+        elseif v.type == "random_text" then
+            for k1, v1 in pairs(v.texts) do
+                --print(fill(l), v1)
+                T:add(v1)
+            end
+        elseif v.type == "quest_drop" then
+            --print(fill(l),v.quest)
+            T:add(v.quest)
+        elseif v.type == "update_quest_desc" then
+            --print(fill(l),v.description)
+            T:add(v.description)
         elseif v.type == "tutorial_start" then
             --print(fill(l),v.text)
             T:add(v.text)

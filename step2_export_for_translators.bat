@@ -19,6 +19,8 @@ for /r %script% %%i in (*.lua) do (
 )
 %lua% lua\cmd_find_strings_in_scripts.lua %work%\strings_in_scripts.txt sort
 
+pause
+
 :skip
 if not exist %work%\for_translate mkdir %work%\for_translate
 

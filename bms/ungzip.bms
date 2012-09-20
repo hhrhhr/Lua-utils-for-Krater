@@ -1,0 +1,31 @@
+idstring \x04\x00\x00\xf0
+get size long
+get zero long  //00 00 00 00
+
+// preallocate memory
+set msize long 0
+for msize = msize < size
+  math msize += 0x10000
+next
+putvarchr MEMORY_FILE msize 0
+log MEMORY_FILE 0 0
+
+savepos pos
+get fsize ASIZE
+append
+for pos = pos < fsize
+  get zsize long
+  savepos pos
+  if zsize < 0x10000
+    clog MEMORY_FILE pos zsize 0x10000
+  else
+    log MEMORY_FILE pos 0x10000
+  endif
+  math pos += zsize
+  goto pos
+next
+append
+
+get name BASENAME
+string name += ".big"
+log name 0 size MEMORY_FILE

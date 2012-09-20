@@ -14,7 +14,7 @@ useUnicode=1
 disableBoxChars=1
 outputInvalidCharGlyph=0
 useHinting=1
-renderFromOutline=0
+renderFromOutline=1
 useClearType=1
 
 # character alignment
@@ -22,8 +22,8 @@ paddingDown=0
 paddingUp=0
 paddingRight=0
 paddingLeft=0
-spacingHoriz=2
-spacingVert=2
+spacingHoriz=4
+spacingVert=4
 useFixedHeight=0
 forceZero=0
 
@@ -55,11 +55,11 @@ local width = 256
 local height = 256
 --]]
 
-function make_bmfc(font, size, bold, width, height, outline)
+function make_bmfc(fontname, size, bold, width, height, outline)
     local aa, smooth = 16, 1
     if size < 20 then
-        aa = 0
-        smooth = 0
+        --aa = 0
+        --smooth = 0
     end
     local a, b, c = 0, 4, 0
     if outline == "_outline" then
@@ -67,5 +67,5 @@ function make_bmfc(font, size, bold, width, height, outline)
         b = 0
         c = 2
     end
-    return string.format(content, font, size, aa, smooth, bold, width, height, a, b, b, b, c)
+    return string.format(content, fontname, size, aa, smooth, bold, width, height, a, b, b, b, c)
 end

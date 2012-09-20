@@ -1,0 +1,91 @@
+get entries long
+
+savepos pos
+math pos += 64  // headerData, equal to footerData from exploded_database.db
+math pos += 192  // zeros
+goto pos
+
+// list of ids
+for i = 0 < entries
+  get hash1 long
+  get hash2 long
+  get hash3 long
+  get hash4 long
+next i
+
+// files
+for i = 0 < entries
+  get hash1 long  //
+  get hash2 long  // unit hash
+  get hash3 long   //
+  get hash4 long  // filename hash
+
+  get numLangs long
+  get zero long    // 00
+  
+  for j = 0 < numLangs
+    get lang long  // 00,01,02,04,08,10,20,40,80...
+    get size long
+    get zero long  // 00
+    putarray 0 j lang
+    putarray 1 j size
+  next j
+
+  savepos pos
+
+  for j = 0 < numLangs
+  string path p= "(%08x%08x)" hash2 hash1
+  string name p= "(%08x%08x)" hash4 hash3 name
+    string ext = "."
+    getarray lang 0 j
+    getarray size 1 j
+
+    if hash1 == 0xA0C69E32
+      if hash2 == 0xCD4238C6
+        string path += "textures"
+        set ext ".dds"
+      endif
+    elseif hash1 == 0xFFF739A4
+      if hash2 == 0x99736BE1
+        string path += "oggPacked"
+        set ext ".oggpak"
+      endif
+    elseif hash1 == 0x10B40FD3
+      if hash2 == 0x0D972BAB
+        string path += "localization"
+        set ext ".lang"
+      endif
+    elseif hash1 == 0xd1e5e77a
+      if hash2 == 0xad9c6d9e
+        string path += "package"
+        set ext ".pak"
+      endif
+    elseif hash1 == 0x2CD117E2
+      if hash2 == 0xA14E8DFA
+        math pos += 21  // jump to script name
+        goto pos
+        get sname string
+        string sname -= ".lua"
+        set tmp name
+        string name p= "%s%s" sname tmp
+        math pos -= 17
+        math size -= 4  // skip first 4 bytes
+
+        string path += "script"
+        set ext ".luac"
+      endif
+    endif
+
+    if lang > 0
+      string lng p= "(%d)" lang
+    else
+      set lng string ""
+    endif
+    string filename p= "%s\%s%s%s" path name lng ext
+
+    log filename pos size
+
+    math pos += size
+    goto pos
+  next j
+next i

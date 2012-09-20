@@ -34,7 +34,7 @@ for font, v in pairs(fonts) do
         desc_name = v.d_names[i]
         desc_hash, dl = murmur.hash64A("materials/fonts/" .. desc_name)
         desc_hash = (desc_hash .. dl):lower()
-        desc_name = desc_name .. ".fnt"
+        desc_name = desc_name .. ".bin"
 
         local dds = db[texture_hash].internal_name
         local fnt = db[desc_hash].internal_name

@@ -89,7 +89,6 @@ function t:sort()
     table.sort(self.data, function(a,b) return a.id < b.id end)
 end
 
-
 --[[ output: gui.txt ********************************************************]]
 fname = "gui"
 
@@ -414,8 +413,6 @@ for k, v in pairs(questnames) do
 end
 SaveParsedQuests()
 t:clear()
-
-
 
 --[[ calculate used strings *************************************************]]
 for k, v in pairs(used) do

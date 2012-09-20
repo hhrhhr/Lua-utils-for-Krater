@@ -12,6 +12,8 @@ if exist %work%\new_fonts (
 
 %lua% lua\cmd_analize_localization.lua %krater% %work% %work%\game_strings.%tr_lang%.bin
 
+pause
+
 %lua% lua\cmd_generate_new_fonts.lua %krater% %work%\new_fonts
 
 :eof
