@@ -21,8 +21,8 @@ end
 local f
 local ft, fd, fbmfc, ffnt, ftga, fdds, txt
 local width, height
-local bmfont = "tools\\bmfont.com -c %s -o %s -t %s >nul"
-local chars = out_path .. "\\..\\utf8_char_list.txt"
+local bmfont = "tools\\bmfont.com -c %s -o %s >nul"
+--local chars = out_path .. "\\..\\utf8_char_list.txt"
 local nvcompress = "tools\\nvcompress.exe -alpha -nomips -bc3 %s %s >nul"
 
 for fnt, v in pairs(fonts) do
@@ -45,7 +45,7 @@ for fnt, v in pairs(fonts) do
             bmfc:close()
 
             print("\ntry to fit in " .. width .. "*" .. height)
-            os.execute(string.format(bmfont, fbmf, ffnt, chars))
+            os.execute(string.format(bmfont, fbmf, ffnt))
 
             if exist(fd .. "_1.tga") or exist(fd .. "_01.tga") then
                 print("not fitted :(")
@@ -67,7 +67,7 @@ for fnt, v in pairs(fonts) do
         w:int32(0)
         w:close()
 
-        bmfont2krater(ffnt)
+        bmfont2krater(ffnt, f.bold)
 
         os.execute("del " .. fd.."_0.tga " .. ffnt .. " " .. fbmf)
     end

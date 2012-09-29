@@ -68,6 +68,9 @@ function parse_branch(branch, level)
         elseif v.type == "text" then
             --print(fill(l),v.text)
             T:add(v.text)
+        elseif v.type == "bootcamp" then
+            --print(fill(l),v.bootcamp)
+            T:add(v.bootcamp)
         else
             --print(fill(l, "!"),v.type)  --skipped
         end

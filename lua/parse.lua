@@ -7,6 +7,8 @@ function Color(r, g, b) return true end
 function fassert(v1, v2, v3) return true end
 Application = {}
 -- \\ hacks
+require("scripts/settings/controller_settings")
+require("scripts/settings/archetypes/archetypes")
 require("scripts/settings/tutorials")
 require("scripts/settings/shop_settings")
 require("scripts/settings/monster_toppings")
@@ -89,13 +91,63 @@ function t:sort()
     table.sort(self.data, function(a,b) return a.id < b.id end)
 end
 
+--[[ output: controls.txt ***************************************************]]
+fname = "controls"
+
+print("[ log] parsing "..fname)
+local Settings = {
+    PlayerControllerSettings,
+    OnScreenMouseControllerSettings,
+    LoginControllerSettings,
+    QuestTrackerControllerSettings,
+    TopDownPlayerControllerSettings
+}
+
+local settings = {}
+for k, v in pairs(Settings) do
+    for k1, v1 in pairs(v) do
+        for k2, v2 in pairs(v1) do
+            table.insert(settings, k2)
+        end
+    end
+end
+Settings = nil
+
+local tmp = ""
+for k, v in pairs(settings) do
+    if tmp ~= v then
+        tmp = v
+        t:add(v)
+    end
+end
+settings = nil
+
+t:sort()
+SaveParsedData()
+t:clear()
+
 --[[ output: gui.txt ********************************************************]]
 fname = "gui"
 
+print("[ log] parsing "..fname)
 for line in io.lines("_work\\strings_in_scripts.txt") do
     t:add(line)
 end
 --t:sort()  -- already sorted in cmd_find_strings_in_scripts.lua
+SaveParsedData()
+t:clear()
+
+--[[ output: monsters.txt  *************************************************]]
+fname = "monsters"
+local parse = ArchetypeGroups
+
+print("[ log] parsing "..fname)
+for i, j in pairs(parse) do
+    for k = 1, #j, 2 do
+        t:add(j[k])
+    end
+end
+t:sort()
 SaveParsedData()
 t:clear()
 
@@ -119,20 +171,6 @@ local parse = ShopArchetypes
 print("[ log] parsing "..fname)
 for k, v in pairs(parse) do
     t:add(v.name)
-end
-t:sort()
-SaveParsedData()
-t:clear()
-
---[[ output: monsters.txt  *************************************************]]
-fname = "monsters"
-local parse = ArchetypeGroups
-
-print("[ log] parsing "..fname)
-for i, j in pairs(parse) do
-    for k = 1, #j, 2 do
-        t:add(j[k])
-    end
 end
 t:sort()
 SaveParsedData()
@@ -386,6 +424,18 @@ for i, j in pairs(abils) do
     if opt then
         t:add(opt)
     end
+end
+t:sort()
+SaveParsedData()
+t:clear()
+
+--[[ output: archetypes.txt **************************************************]]
+fname = "archetypes"
+local parse = Archetypes
+
+print("[ log] parsing "..fname)
+for k, v in pairs(parse) do
+    t:add(v.name or v.id)
 end
 t:sort()
 SaveParsedData()

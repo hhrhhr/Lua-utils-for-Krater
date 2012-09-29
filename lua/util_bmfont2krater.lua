@@ -1,6 +1,6 @@
 require("util_binary_writer")
 
-function bmfont2krater(input_file)
+function bmfont2krater(input_file, bold)
     assert(input_file, "no input file")
     
     local size, height, base, scaleW, scaleH, count
@@ -51,11 +51,75 @@ function bmfont2krater(input_file)
         })
     end
     f:close()
-    
+
+    if bold == 1 then
+        local small_chars = {}
+        -- latin
+        for c = 97, 122 do
+            for k, v in pairs(chars) do
+                if (v[1] + 32) == c then
+                    table.insert(small_chars, {
+                        c, v[2], v[3], v[4], v[5], v[6], v[7], v[8]
+                    })
+                    break
+                end
+            end
+        end
+        -- latin supplemented
+        for c = 224, 255 do
+            for k, v in pairs(chars) do
+                if (v[1] + 32) == c then
+                    table.insert(small_chars, {
+                        c, v[2], v[3], v[4], v[5], v[6], v[7], v[8]
+                    })
+                    break
+                end
+            end
+        end
+        -- cyrillic
+        for c = 1072, 1103 do
+            for k, v in pairs(chars) do
+                if (v[1] + 32) == c then
+                    table.insert(small_chars, {
+                        c, v[2], v[3], v[4], v[5], v[6], v[7], v[8]
+                    })
+                    break
+                end
+            end
+        end
+        -- cyrillic ua, by
+        for c = 1105, 1119 do
+            for k, v in pairs(chars) do
+                if (v[1] + 80) == c then
+                    table.insert(small_chars, {
+                        c, v[2], v[3], v[4], v[5], v[6], v[7], v[8]
+                    })
+                    break
+                end
+            end
+        end
+        -- ua Г с крючком
+        for k, v in pairs(chars) do
+            if (v[1]) == 1168 then
+                table.insert(small_chars, {
+                    1169, v[2], v[3], v[4], v[5], v[6], v[7], v[8]
+                })
+                break
+            end
+        end
+        -- concat tables
+        for k, v in pairs(small_chars) do
+            table.insert(chars, v)
+            count = count + 1
+        end
+        small_chars = nil
+        table.sort(chars, function(a, b) return a[1] < b[1] end)
+    end -- bold == 1
+
     local w = BinaryWriter
     local output_file = string.gsub(input_file, ".fnt$", ".bin")
     w:open(output_file)
-    
+
     w:float32(size)
     w:float32(height)
     w:float32(base)
@@ -64,7 +128,7 @@ function bmfont2krater(input_file)
     w:int32(count)
     
     for k,v in pairs(chars) do
-    --print(v[1], v[2], v[3], v[4], v[5], v[6], v[7])
+    --print(v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8])
         w:int32(v[1])
         w:float32(v[2])
         w:float32(v[3])
